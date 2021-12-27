@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
-//@route    GET api/profile
-//@desc     Test route
-//@access   Public
-router.get('/', (req, res) => res.send('Profile route'));
+const auth = require('.auth')
+
+//@route    GET api/profile/me
+//@desc     Get current user's profile
+//@access   Private
+router.get('/', auth (req, res) => res.send('Profile route'));
 
 module.exports = router;
