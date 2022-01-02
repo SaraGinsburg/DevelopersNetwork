@@ -1,7 +1,7 @@
 {
-  "name": "familynetwork",
+  "name": "developersnetwork",
   "version": "1.0.0",
-  "description": "Family social network",
+  "description": "Developers social network",
   "main": "server.js",
   "scripts": {
     "start": "node server",
