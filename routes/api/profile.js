@@ -4,7 +4,8 @@ const { check, validationResult } = require('express-validator')
 
 const auth = require('../../middleware/auth')
 const User = require('../../models/User')
-const Profile = require('../../models/Profile')
+const Profile = require('../../models/Profile');
+const { trusted } = require('mongoose');
 
 //@route    GET api/profile/me
 //@desc     Get current user's profile
@@ -76,17 +77,14 @@ router.post(
   if (facebook) profileFields.social.facebook = facebook
 
   try {
-    let profile = await Profile.findOne({user: req.user.id})
-
-    if(profile){
-      //update
-      profile = await Profile.findOneAndUpdate(
+      //update, using upsert option (creates new doc if no match is found):
+      let profile = await Profile.findOneAndUpdate(
         {user: req.user.id},
         {$set: profileFields},
-        {new: true}
+        {new: true, upsert: true, setDefaultsOnInsert:true}
       )
       return res.json(profile)
-    }
+    
     //create
     profile = await new Profile(profileFields)
     
@@ -96,6 +94,61 @@ router.post(
     console.error(err.message)
     res.status(500).send('Server Error')
   }
+})
+
+//@route    GET api/profile
+//@desc     Get all profiles
+//@access   Public
+router.get('/', async (req,res)=>{
+  try {
+    const profiles = await Profile.find().populate('user',['name', 'avatar'])
+    res.json(profiles)
+  } catch (err) {
+    console.error(err.message)
+    res.status(500).send('Server Error')
+  }
+
+})
+
+//@route    GET api/profile/user/:user_id
+//@desc     Get profile by user ID
+//@access   Public
+router.get('/user/:user_id', async (req,res)=>{
+  try {
+    const profile = await Profile.findOne({user: req.params.user_id}).populate('user',['name', 'avatar'])
+    
+    if (!profile) return res.status(400).json({msg: 'Profile not found'})
+
+    return res.json(profile)
+
+  } catch (err) {
+    console.error(err.message)
+    if (err.kind == 'ObjectId') return res.status(400).json({msg: 'Profile not found'})
+    res.status(500).send('Server Error')
+  }
+
+})
+
+//@route    DELETE api/profile
+//@desc     Delete profile, user & posts
+//@access   Private
+router.delete('/', auth,  async (req, res) => {
+  try {
+    // @todo - remove user's posts
+    
+    // remove user's profile
+    await Profile.findOneAndRemove({ user: req.user.id })
+
+    // remove user
+    await User.findOneAndRemove({ _id: req.user.id })
+
+    res.json({ msg: 'user deleted' })
+    
+  } catch (err) {
+    console.error(err.message)
+    return res.status(500).json({msg: err.message})
+  }
+  
 })
 
 module.exports = router;

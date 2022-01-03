@@ -21,6 +21,10 @@
   },
   "devDependencies": {
     "concurrently": "^6.5.1",
-    "nodemon": "^2.0.15"
+    "eslint": "^8.6.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "nodemon": "^2.0.15",
+    "prettier": "^1.9.1"
   }
 }
