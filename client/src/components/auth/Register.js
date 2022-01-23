@@ -1,5 +1,9 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
+// import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { setAlert } from '../../actions/alert';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +13,8 @@ const Register = () => {
     password2: '',
   });
 
+  const dispatch = useDispatch();
+
   const { name, email, password, password2 } = formData;
 
   const onChange = (e) =>
@@ -16,15 +22,15 @@ const Register = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (password !== password2) {
-      console.log('Passwords do not match');
+    if (formData.password !== formData.password2) {
+      dispatch(setAlert('Passwords do not match', 'danger'));
     } else {
       console.log('success');
     }
   };
 
   return (
-    <Fragment>
+    <section className='container'>
       <h1 className='large text-primary'>Sign Up</h1>
       <p className='lead'>
         <i className='fas fa-user'></i> Create Your Account
@@ -79,7 +85,7 @@ const Register = () => {
       <p className='my-1'>
         Already have an account? <Link to='/login'>Sign In</Link>
       </p>
-    </Fragment>
+    </section>
   );
 };
 
