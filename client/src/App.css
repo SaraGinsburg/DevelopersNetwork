@@ -156,6 +156,13 @@ img {
   color: #333;
 }
 
+.alert-wrapper {
+  position: fixed;
+  top: 4rem;
+  right: 2rem;
+  display: inline-block;
+}
+
 .btn-primary,
 .bg-primary,
 .badge-primary,
