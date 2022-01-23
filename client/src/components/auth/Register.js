@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { setAlert } from '../../actions/alert';
+import { register } from '../../actions/auth';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -25,7 +26,7 @@ const Register = () => {
     if (formData.password !== formData.password2) {
       dispatch(setAlert('Passwords do not match', 'danger'));
     } else {
-      console.log('success');
+      register({ name, email, password });
     }
   };
 
