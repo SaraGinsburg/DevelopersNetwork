@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-// import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+
+import { Link, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { setAlert } from '../../actions/alert';
@@ -18,6 +18,8 @@ const Register = () => {
 
   const { name, email, password, password2 } = formData;
 
+  const isAuthenticated = useSelector((state) => !!state.auth.isAuthenticated);
+
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -29,6 +31,10 @@ const Register = () => {
       dispatch(register({ name, email, password }));
     }
   };
+
+  if (isAuthenticated) {
+    return <Navigate to='/dashboard' />;
+  }
 
   return (
     <section className='container'>
