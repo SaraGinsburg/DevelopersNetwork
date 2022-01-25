@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import setAuthToken from '../utils/setAuthToken';
 import { setAlert } from './alert';
 
@@ -31,17 +32,9 @@ export const loadUser = () => async (dispatch) => {
 };
 
 //Register User
-export const register = ({ name, email, password }) => async (dispatch) => {
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
-
-  const body = JSON.stringify({ name, email, password });
-
+export const register = (formData) => async (dispatch) => {
   try {
-    const res = await axios.post('/api/users', body, config);
+    const res = await axios.post('/api/users', formData);
 
     dispatch({
       type: REGISTER_SUCCESS,
@@ -62,16 +55,9 @@ export const register = ({ name, email, password }) => async (dispatch) => {
 
 //Login User
 export const login = (email, password) => async (dispatch) => {
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
-
-  const body = JSON.stringify({ email, password });
-
+  const body = { email, password };
   try {
-    const res = await axios.post('api/auth', body, config);
+    const res = await axios.post('api/auth', body);
 
     dispatch({
       type: LOGIN_SUCCESS,
