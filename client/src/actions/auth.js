@@ -41,6 +41,7 @@ export const register = (formData) => async (dispatch) => {
     dispatch(loadUser());
   } catch (err) {
     const errors = err.response.data.errors;
+    console.log('err.response.data', err.response.data);
     if (errors) {
       errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
     }
@@ -53,8 +54,9 @@ export const register = (formData) => async (dispatch) => {
 //Login User
 export const login = (email, password) => async (dispatch) => {
   const body = { email, password };
+
   try {
-    const res = await api.post('auth', body);
+    const res = await api.post('/auth', body);
 
     dispatch({
       type: LOGIN_SUCCESS,
@@ -64,8 +66,9 @@ export const login = (email, password) => async (dispatch) => {
     dispatch(loadUser());
   } catch (err) {
     const errors = err.response.data.errors;
+
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+      errors.forEach((error) => dispatch(setAlert(error.message, 'danger')));
     }
     dispatch({
       type: LOGIN_FAIL,
