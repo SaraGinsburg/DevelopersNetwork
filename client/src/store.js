@@ -8,7 +8,7 @@ const initialState = {};
 
 const middleware = [thunk];
 
-const composeEnhancers = composeWithDevTools({ trace: true });
+const composeEnhancers = composeWithDevTools({ trace: true, traceLimit: 25 });
 
 const store = createStore(
   rootReducer,
