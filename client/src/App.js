@@ -14,15 +14,22 @@ import store from './store';
 import './App.css';
 import setAuthToken from './utils/setAuthToken';
 import { loadUser } from './actions/auth';
-
-if (localStorage.token) {
-  setAuthToken(localStorage.token);
-}
+import { LOGOUT } from './actions/types';
 
 const App = () => {
   useEffect(() => {
+    if (localStorage.token) {
+      setAuthToken(localStorage.token);
+    }
+
+    //try to fetch a user, if no token or invalid token will get 401 response from our API
     store.dispatch(loadUser());
+
+    window.addEventListener('storage', () => {
+      if (!localStorage.token) store.dispatch({ type: LOGOUT });
+    });
   }, []);
+
   return (
     <Provider store={store}>
       <Router>
